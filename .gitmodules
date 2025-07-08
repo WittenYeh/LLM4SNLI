@@ -1,0 +1,3 @@
+[submodule "SptialEval"]
+	path = SptialEval
+	url = https://github.com/jiayuww/SpatialEval
