@@ -6,7 +6,7 @@ from tqdm import tqdm
 
 def evaluate(model, dataloader, device):
     """
-    在干净数据集上评估模型
+    Evaluate model performance on clean dataset
     """
     model.eval()
     all_preds = []
@@ -14,7 +14,7 @@ def evaluate(model, dataloader, device):
 
     with torch.no_grad():
         for batch in tqdm(dataloader, desc="Evaluating"):
-            # 将batch中的数据移到指定设备
+            # Move batch data to specified device
             inputs = {k: v.to(device) for k, v in batch.items()}
             labels = inputs.pop('labels')
 
@@ -32,7 +32,7 @@ def evaluate(model, dataloader, device):
 
 def evaluate_adversarial(model, dataloader, device, fgm_attack, epsilon):
     """
-    评估模型在对抗攻击下的鲁棒性
+    Evaluate model robustness under adversarial attacks
     """
     model.eval()
     
@@ -44,43 +44,43 @@ def evaluate_adversarial(model, dataloader, device, fgm_attack, epsilon):
         inputs = {k: v.to(device) for k, v in batch.items()}
         labels = inputs.pop('labels')
         
-        # 1. 获得原始预测
+        # 1. Get original predictions
         with torch.no_grad():
             clean_outputs = model(**inputs)
             clean_preds = torch.argmax(clean_outputs.logits, dim=-1)
         
-        # 2. 生成对抗扰动 (需要计算梯度)
-        # 为了生成攻击，我们需要计算损失和梯度
+        # 2. Generate adversarial perturbations (requires gradient calculation)
+        # To generate attacks, we need to compute loss and gradients
         model.zero_grad()
-        # 确保label在模型输入中
+        # Ensure labels are included in model inputs
         inputs['labels'] = labels
         loss = model(**inputs).loss
         loss.backward()
         
-        # 3. 应用攻击并获得对抗预测
+        # 3. Apply attack and get adversarial predictions
         fgm_attack.attack(epsilon=epsilon)
         with torch.no_grad():
             adv_outputs = model(**inputs)
             adv_preds = torch.argmax(adv_outputs.logits, dim=-1)
         fgm_attack.restore()
         
-        # 4. 统计结果
+        # 4. Collect statistics
         correct_mask = (clean_preds == labels)
         adv_correct_mask = (adv_preds == labels)
         
         total_samples += len(labels)
         originally_correct += correct_mask.sum().item()
         
-        # 统计那些本来预测正确，但被攻击后预测错误的样本
+        # Count samples that were originally correct but became wrong after attack
         flipped_mask = correct_mask & (~adv_correct_mask)
         flipped_to_wrong += flipped_mask.sum().item()
 
     if originally_correct == 0:
         return {"adversarial_success_rate": 0, "robust_accuracy": 0}
 
-    # 对抗攻击成功率 = 被扳倒的样本数 / 原本正确的样本数
+    # Adversarial success rate = flipped samples / originally correct samples
     adv_success_rate = flipped_to_wrong / originally_correct
-    # 鲁棒准确率 = 在攻击下仍然正确的样本数 / 总样本数
+    # Robust accuracy = samples that remain correct under attack / total samples
     robust_accuracy = (originally_correct - flipped_to_wrong) / total_samples
 
     return {
