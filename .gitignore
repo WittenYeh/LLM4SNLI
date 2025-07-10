@@ -1,0 +1,3 @@
+models/bert-base-uncased/
+post-trained-model/bert-snli-adversarial/
+post-trained-model/bert-snli-plain/

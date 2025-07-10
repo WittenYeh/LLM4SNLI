@@ -37,7 +37,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     api=HubApi()
-    api.login('YOUR_MODELSCOPE_SDK_ACCESS_TOKEN')
+    api.login('5e159a6a-ba99-4abc-8f3d-2f4d41f368ce')
     
     # The actual model files will be inside a subdirectory, so we use the parent dir for cache_dir
     download_model(args.model_id, args.output_dir)

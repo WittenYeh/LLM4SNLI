@@ -1,0 +1,1 @@
+This forder is used to store model weight of bert-base-uncased that is not post trained.
