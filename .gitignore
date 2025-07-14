@@ -1,4 +1,8 @@
 models/bert-base-uncased/
 post-trained-model/bert-snli-adversarial/
 post-trained-model/bert-snli-plain/
+post-trained-model/bert-mnli-adversarial/
+post-trained-model/bert-mnli-plain/
 backend/__pycache__/
+backend/multi-gpu/__pycache__/
+backend/single-gpu/__pycache__/

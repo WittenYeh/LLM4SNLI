@@ -1,0 +1,1 @@
+This folder is used to store model weight of fine-tuned models.

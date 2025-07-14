@@ -5,5 +5,4 @@ python3 train.py \
     --epochs 5 \
     --batch_size 128 \
     --lr 2e-5 \
-    --output_dir ../post-trained_model
-    
+    --output_dir ../../post-trained-models/bert-snli-no-adversarial/

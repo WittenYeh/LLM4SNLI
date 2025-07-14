@@ -6,5 +6,4 @@ python3 train.py \
     --batch_size 128 \
     --lr 2e-5 \
     --do_adversarial_training \
-    --output_dir ../post-trained_model
-    
+    --output_dir ../../post-trained-models/bert-snli-adversarial/
